@@ -17,7 +17,7 @@ After cloning the repository please run:
 	$ play
 ```
 
-After the Play! framework finishes initializing your project please type:
+After the Play! framework has finished initializing your project please type:
 
 ```
 	[nothanks] $ run
