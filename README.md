@@ -25,6 +25,16 @@ After the Play! framework has finished initializing your project please type:
 
 Then the project should be ready to go. Visit [http://localhost:9000](http://localhost:9000) in your browser to see it in action!
 
+## Testing
+
+To test the project simply run `test` command in Play! console started like before:
+
+```
+	$ play
+
+	[nothanks] $ test
+```
+
 ## Changelog
 
 ### Version 0.1:
