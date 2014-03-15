@@ -1,57 +1,30 @@
 package models
 
-import akka.actor.Actor
-import akka.actor.ActorRef
-import akka.actor.Props
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
+
 import errors.NotEnoughPlayers
-import errors.GameError
+import errors.TooManyPlayers
+import services.TimestampService
 
 /**
- * Companion object for the main [[models.Game]] actor.
- */
-object Game {
-  /**
-   * Creates new game actor.
-   *
-   * @param name name of the game
-   * @param host player that is hosting the game
-   * @param minPlayers minimum number of players to start the game
-   * @param password (optional) game's password
-   */
-  def newGameActor(name: String, host: Player, minPlayers: Integer, password: Option[String] = None): ActorRef =
-    Akka.system.actorOf(Props(new GameActor(name, host, minPlayers, password)))
-
-}
-
-/**
- * Protocol used by the main [[models.Game]] actor.
- */
-object GameProtocol {
-  case object Start
-  case class Join(player: Player, password: Option[String] = None)
-  case class Leave(player: Player)
-
-  case class Error(error: GameError)
-}
-
-/**
- * Actor that manages a single game.
+ * Single game.
  *
  * @param name game's name
  * @param host player that is hosting the game
  * @param minPlayers minimum number of players to start the game
+ * @param maxPlayers maximum number of players in the game
  * @param password game's password
  */
-class GameActor(val name: String, val host: Player, val minPlayers: Integer, val password: Option[String]) extends Actor {
+class Game(val name: String, val host: Player, val minPlayers: Integer, val maxPlayers: Integer) {
 
   /**
    *  Players that are involved in the game.
    *
    *  Note: In the beginning there is only one player - the host.
    */
-  val players = scala.collection.mutable.Seq[Player](host)
+  val players = scala.collection.mutable.Buffer[Player](host)
 
   /** Start time of the game (or None, if not yet started). */
   var startTime: Option[Long] = None
@@ -68,25 +41,56 @@ class GameActor(val name: String, val host: Player, val minPlayers: Integer, val
    * Is true if game is password protected, otherwise false.
    */
   val isPasswordProtected: Boolean = {
-    password match {
-      case Some(_) => true
-      case None => false
+    //TODO: Add password protection
+    false
+    //    password match {
+    //      case Some(_) => true
+    //      case None => false
+    //    }
+  }
+
+  /**
+   * Starts the game.
+   *
+   * Return a Try with a boolean value that indicates weather game has started correctly (true)
+   * or game is already running (false). If anything goes wrong try results in a Failure with
+   * corresponding error message.
+   */
+  def start(): Try[Boolean] = {
+    try {
+      if (players.size < minPlayers)
+        Failure(NotEnoughPlayers())
+      else {
+        startTime match {
+          case Some(_) => Success(false)
+          case None =>
+            startTime = Some(TimestampService.now())
+            Success(true)
+        }
+      }
     }
   }
 
   /**
-   * Receives actor's messages.
+   * Joins player to the game.
+   * 
+   * Returns a Try with a boolean value that indicates weather player has successfully joined (true)
+   * or has previously joined the game (false). If anything goes wrong Try results in a Failure with
+   * corresponding error message.
    */
-  def receive = {
-    case GameProtocol.Start =>
-      if (players.size < minPlayers)
-        sender ! GameProtocol.Error(NotEnoughPlayers())
-      else {
-        println("Game started")
+  def join(newPlayer: Player): Try[Boolean] = {
+    try {
+      if (players.size + 1 <= maxPlayers) {
+        if (players.find(_.name == newPlayer.name).isDefined) {
+          // Player already joined the game
+          Success(false)
+        } else {
+          players += newPlayer
+          Success(true)
+        }
+      } else {
+        Failure(TooManyPlayers())
       }
-    case GameProtocol.Join(newPlayer, password) =>
-      println(s"Player $newPlayer joined $name with password: $password")
-    case GameProtocol.Leave(playerLeaving) =>
-      println(s"Player $playerLeaving left $name")
+    }
   }
 }
