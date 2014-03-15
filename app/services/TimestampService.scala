@@ -10,7 +10,7 @@ object TimestampService {
    * 
    * @return total elapsed milliseconds from 1/1/1970
    */
-  def now: Long = {
+  def now(): Long = {
     System.currentTimeMillis
   }
 
