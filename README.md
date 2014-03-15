@@ -31,7 +31,6 @@ To test the project simply run `test` command in Play! console started like befo
 
 ```
 	$ play
-
 	[nothanks] $ test
 ```
 
