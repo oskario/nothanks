@@ -1,4 +1,4 @@
-package models
+package services
 
 import akka.actor.Actor
 import akka.actor.Props
@@ -13,7 +13,7 @@ import play.api.libs.concurrent.Akka
  * Offers dynamic, extensive and configurable logging system.
  */
 object LoggingService {
-  import models.LoggingServiceProtocol._
+  import services.LoggingServiceProtocol._
 
   private val actor = Akka.system.actorOf(Props[LoggingService])
 
@@ -30,7 +30,6 @@ object LoggingService {
   }
 
   def info(sender: String, message: String) = {
-    actor ! LogInfo(s"[$sender]: $message")
   }
 
   def debug(message: String) = {
@@ -53,7 +52,7 @@ object LoggingServiceProtocol {
  * Defines custom logging procedures (e.g. broadcasting messages to other log provider, saving to file, etc.).
  */
 class LoggingService extends Actor {
-  import models.LoggingServiceProtocol._
+  import services.LoggingServiceProtocol._
 
   val logger = Logger
 
