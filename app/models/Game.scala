@@ -5,6 +5,8 @@ import akka.actor.ActorRef
 import akka.actor.Props
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
+import errors.NotEnoughPlayers
+import errors.GameError
 
 /**
  * Companion object for the main [[models.Game]] actor.
@@ -15,10 +17,11 @@ object Game {
    *
    * @param name name of the game
    * @param host player that is hosting the game
+   * @param minPlayers minimum number of players to start the game
    * @param password (optional) game's password
    */
-  def newGameActor(name: String, host: Player, password: Option[String] = None): ActorRef =
-    Akka.system.actorOf(Props(new GameActor(name, host, password)))
+  def newGameActor(name: String, host: Player, minPlayers: Integer, password: Option[String] = None): ActorRef =
+    Akka.system.actorOf(Props(new GameActor(name, host, minPlayers, password)))
 
 }
 
@@ -29,6 +32,8 @@ object GameProtocol {
   case object Start
   case class Join(player: Player, password: Option[String] = None)
   case class Leave(player: Player)
+
+  case class Error(error: GameError)
 }
 
 /**
@@ -36,9 +41,10 @@ object GameProtocol {
  *
  * @param name game's name
  * @param host player that is hosting the game
+ * @param minPlayers minimum number of players to start the game
  * @param password game's password
  */
-class GameActor(val name: String, val host: Player, val password: Option[String]) extends Actor {
+class GameActor(val name: String, val host: Player, val minPlayers: Integer, val password: Option[String]) extends Actor {
 
   /**
    *  Players that are involved in the game.
@@ -57,7 +63,7 @@ class GameActor(val name: String, val host: Player, val password: Option[String]
       case None => false
     }
   }
-  
+
   /**
    * Is true if game is password protected, otherwise false.
    */
@@ -73,7 +79,11 @@ class GameActor(val name: String, val host: Player, val password: Option[String]
    */
   def receive = {
     case GameProtocol.Start =>
-      println("Game started")
+      if (players.size < minPlayers)
+        sender ! GameProtocol.Error(NotEnoughPlayers())
+      else {
+        println("Game started")
+      }
     case GameProtocol.Join(newPlayer, password) =>
       println(s"Player $newPlayer joined $name with password: $password")
     case GameProtocol.Leave(playerLeaving) =>

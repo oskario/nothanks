@@ -13,7 +13,7 @@ import akka.actor.Actor
 class Player(val name: String, var chips: Int) {
 
   /** Cards already collected by the player. */
-  var cards = scala.collection.mutable.Set[Card]()
+  val cards = scala.collection.mutable.Buffer[Card]()
 
   /**
    * Takes new card.
