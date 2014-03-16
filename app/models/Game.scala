@@ -3,10 +3,12 @@ package models
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
-import errors.NotEnoughPlayers
 import errors.TooManyPlayers
 import services.TimestampService
+import scala.util.Random
+import errors.PlayerCantBid
+import errors.GameNotStarted
+import errors.NotEnoughPlayers
 
 /**
  * Single game.
@@ -28,6 +30,9 @@ class Game(val name: String, val host: Player, val minPlayers: Integer, val maxP
 
   /** Start time of the game (or None, if not yet started). */
   var startTime: Option[Long] = None
+
+  /** Player whose turn is. */
+  var activePlayer: Option[Player] = None
 
   /** Returns true if the game is already running. */
   def isRunning(): Boolean = {
@@ -64,6 +69,7 @@ class Game(val name: String, val host: Player, val minPlayers: Integer, val maxP
         startTime match {
           case Some(_) => Success(false)
           case None =>
+            activePlayer = Some(players(Random.nextInt(players.size)))
             startTime = Some(TimestampService.now())
             Success(true)
         }
@@ -73,7 +79,7 @@ class Game(val name: String, val host: Player, val minPlayers: Integer, val maxP
 
   /**
    * Joins player to the game.
-   * 
+   *
    * Returns a Try with a boolean value that indicates weather player has successfully joined (true)
    * or has previously joined the game (false). If anything goes wrong Try results in a Failure with
    * corresponding error message.
@@ -90,6 +96,30 @@ class Game(val name: String, val host: Player, val minPlayers: Integer, val maxP
         }
       } else {
         Failure(TooManyPlayers())
+      }
+    }
+  }
+
+  /**
+   * Makes a bid by given player.
+   *
+   * Returns a Try with a boolean value that is set to true if bid was executed successfully. If anything
+   * goes wrong Try results in a Failure with a corresponding error message.
+   */
+  def bid(player: Player): Try[Boolean] = {
+    try {
+      activePlayer match {
+        case Some(aPlayer) => {
+          if (player == aPlayer) {
+            player.bid()
+            Success(true)
+          } else {
+            Failure(PlayerCantBid(player))
+          }
+        }
+        case None => {
+          Failure(GameNotStarted())
+        }
       }
     }
   }
