@@ -33,6 +33,43 @@ class Game(val name: String, val host: Player, val minPlayers: Integer, val maxP
 
   /** Player whose turn is. */
   var activePlayer: Option[Player] = None
+  
+  /** All available cards in the game. */
+  val allCards: Seq[Card] =  Random.shuffle(for (i <- 3 to 35) yield Card(i))
+
+  /** Cards that have been rejected from the game. */
+  var rejectedCards = Seq[Card]()
+
+  /** Cards still left in the game. */
+  var leftCards = Seq[Card]()
+
+  /**
+   * Is true if game is password protected, otherwise false.
+   */
+  val isPasswordProtected: Boolean = {
+    //TODO: Add password protection
+    
+    //    password match {
+    //      case Some(_) => true
+    //      case None => false
+    //    }
+    
+    false
+  }
+
+  /**
+   * Current active card.
+   */
+  def activeCard: Option[Card] = {
+    startTime match {
+      case Some(_) =>
+        if (leftCards.size > 1)
+          Some(leftCards(0))
+        else
+          None
+      case None => None
+    }
+  }
 
   /** Returns true if the game is already running. */
   def isRunning(): Boolean = {
@@ -40,18 +77,6 @@ class Game(val name: String, val host: Player, val minPlayers: Integer, val maxP
       case Some(_) => true
       case None => false
     }
-  }
-
-  /**
-   * Is true if game is password protected, otherwise false.
-   */
-  val isPasswordProtected: Boolean = {
-    //TODO: Add password protection
-    false
-    //    password match {
-    //      case Some(_) => true
-    //      case None => false
-    //    }
   }
 
   /**
@@ -69,6 +94,9 @@ class Game(val name: String, val host: Player, val minPlayers: Integer, val maxP
         startTime match {
           case Some(_) => Success(false)
           case None =>
+            rejectedCards = allCards.take(9)
+          	leftCards = allCards.slice(9, 33)
+          	  
             activePlayer = Some(players(Random.nextInt(players.size)))
             startTime = Some(TimestampService.now())
             Success(true)
