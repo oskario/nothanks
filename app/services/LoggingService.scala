@@ -30,10 +30,15 @@ object LoggingService {
   }
 
   def info(sender: String, message: String) = {
+    actor ! LogInfo(s"[$sender] $message")
   }
 
   def debug(message: String) = {
     actor ! LogDebug(message)
+  }
+
+  def debug(sender: String, message: String) = {
+    actor ! LogDebug(s"[$sender] $message")
   }
 }
 
