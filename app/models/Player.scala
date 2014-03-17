@@ -25,7 +25,7 @@ class Player(val name: String, var chips: Int = 11) {
 
   /**
    * Bids.
-   * 
+   *
    * Throws [[errors.PlayerCantBid]] when player have no chips left to bid.
    */
   def bid() = {

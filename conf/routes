@@ -1,4 +1,5 @@
 
 GET     /                           controllers.Application.index
+GET		/start/:user				controllers.Application.start(user: String)
 
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
