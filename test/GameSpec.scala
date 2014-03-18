@@ -100,5 +100,80 @@ class GameSpec extends Specification {
         game.bid(player1) must beFailedTry
       }
     }
+
+    "have exactly 33 cards in total" in {
+      val player1 = new models.Player("Player 1", 2)
+      val game = new models.Game("New game", player1, 2, 5)
+
+      game.allCards.size must equalTo(33)
+    }
+
+    "have exactly 9 cards rejected" in {
+      val player1 = new models.Player("Player 1")
+      val player2 = new models.Player("Player 2")
+      val game = new models.Game("New game", player1, 2, 5)
+
+      game.join(player2) must beSuccessfulTry.withValue(true)
+      game.start() must beSuccessfulTry.withValue(true)
+
+      game.rejectedCards.size must equalTo(9)
+    }
+
+    "have exactly 24 cards in play at the beginning" in {
+      val player1 = new models.Player("Player 1")
+      val player2 = new models.Player("Player 2")
+      val game = new models.Game("New game", player1, 2, 5)
+
+      game.join(player2) must beSuccessfulTry.withValue(true)
+      game.start() must beSuccessfulTry.withValue(true)
+
+      game.leftCards.size must equalTo(24)
+    }
+
+    "have different sets of cards for each game" in {
+      val player1 = new models.Player("Player 1")
+      val player2 = new models.Player("Player 2")
+      val game1 = new models.Game("New game", player1, 2, 5)
+
+      game1.join(player2) must beSuccessfulTry.withValue(true)
+      game1.start() must beSuccessfulTry.withValue(true)
+
+      val set1 = game1.leftCards
+
+      val game2 = new models.Game("New game", player1, 2, 5)
+
+      game2.join(player2) must beSuccessfulTry.withValue(true)
+      game2.start() must beSuccessfulTry.withValue(true)
+
+      val set2 = game2.leftCards
+
+      set1 must not be equalTo(set2)
+    }
+
+    "allow taking cards" in {
+      val player1 = new models.Player("Player 1")
+      val player2 = new models.Player("Player 2")
+      val game = new models.Game("New game", player1, 2, 5)
+
+      game.join(player2) must beSuccessfulTry.withValue(true)
+      game.start() must beSuccessfulTry.withValue(true)
+
+      game.take(game.activePlayer.get) must beSuccessfulTry.withValue(true)
+    }
+
+    "block taking cards by players whose turn it is not" in {
+      val player1 = new models.Player("Player 1")
+      val player2 = new models.Player("Player 2")
+      val game = new models.Game("New game", player1, 2, 5)
+
+      game.join(player2) must beSuccessfulTry.withValue(true)
+      game.start() must beSuccessfulTry.withValue(true)
+
+      if (game.activePlayer.get == player1) {
+        game.take(player2) must beFailedTry
+      } else {
+        game.take(player1) must beFailedTry
+      }
+    }
   }
 }

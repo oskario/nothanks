@@ -9,7 +9,7 @@ import errors.PlayerCantBid
  * @param name player's name
  * @param chips number of player's chips
  */
-class Player(val name: String, var chips: Int) {
+class Player(val name: String, var chips: Int = 11) {
 
   /** Cards already collected by the player. */
   val cards = scala.collection.mutable.Buffer[Card]()
@@ -25,7 +25,7 @@ class Player(val name: String, var chips: Int) {
 
   /**
    * Bids.
-   * 
+   *
    * Throws [[errors.PlayerCantBid]] when player have no chips left to bid.
    */
   def bid() = {

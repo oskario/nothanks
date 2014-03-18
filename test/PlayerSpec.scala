@@ -16,12 +16,12 @@ class PlayerSpec extends Specification {
       new models.Player("Oskar", 0).name must equalTo("Oskar") 
     }
     
-    "have correct number of chips" in {
-      new models.Player("", 123).chips must equalTo(123)
+    "have exactly 11 chips at the beginning" in {
+      new models.Player("").chips must equalTo(11)
     }
     
-    "have correct number of chips after bidding twice" in {
-      val player = new models.Player("", 11)
+    "have 9 chips after bidding twice" in {
+      val player = new models.Player("")
       player.bid()
       player.bid()
       
@@ -29,11 +29,11 @@ class PlayerSpec extends Specification {
     }
     
     "have initially no cards" in {
-      new models.Player("", 123).cards.size must equalTo(0)
+      new models.Player("").cards.size must equalTo(0)
     }
     
     "have 2 cards after taking card twice" in {
-      val player = new models.Player("", 0)
+      val player = new models.Player("")
       player.take(models.Card(1))
       player.take(models.Card(2))
       
