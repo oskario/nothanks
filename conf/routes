@@ -1,10 +1,8 @@
 
-
-GET     /           				com.tuplejump.playYeoman.Yeoman.redirectRoot(base="/ui/")
-
-GET     /ui         				com.tuplejump.playYeoman.Yeoman.index
-->      /ui/        				yeoman.Routes
-
 GET		/start/:user				controllers.Application.start(user: String)
-
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+GET     /           				com.tuplejump.playYeoman.Yeoman.index
+->      /        					yeoman.Routes
+
+
