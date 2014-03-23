@@ -1,15 +1,15 @@
 'use strict';
 
 angular.module('nothanks-ui')
-    .controller('LoginCtrl', function ($scope) {
+    .controller('LoginCtrl', function ($scope, Authentication) {
         $scope.create = {};
         $scope.login = {};
 
         $scope.logIn = function () {
-            alert('Logging ' + $scope.login.email + ' in...');
+            Authentication.logIn($scope.login.email, $scope.login.password);
         };
 
         $scope.create = function () {
-            alert('Creating new account ' + $scope.create.email);
+            Authentication.create($scope.create.email, $scope.create.password);
         };
     });
