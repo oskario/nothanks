@@ -1,0 +1,46 @@
+
+#login-page form {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+#login-page form h3 {
+    margin-bottom: 10px;
+}
+
+#login-page .form-login .checkbox {
+    font-weight: normal;
+}
+
+#login-page form .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+
+#login-page form .form-control:focus {
+    z-index: 2;
+}
+
+#login-page form .first-input {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#login-page form .last-input {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+@media (min-width: 768px) {
+    #login-page #or-label {
+        margin-top: 100px;
+    }
+}

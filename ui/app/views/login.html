@@ -1,0 +1,25 @@
+<div class="container" id="login-page">
+    <div class="col-sm-5 col-xs-12">
+        <form class="form-create" role="form">
+            <h3 class="">Create new account</h3>
+            <input ng-model="create.email" type="email" class="form-control first-input" placeholder="Email address" required autofocus>
+            <input ng-model="create.password" type="password" class="form-control last-input" placeholder="Password" required>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="create()">Create</button>
+        </form>
+    </div>
+    <div id="or-label" class="col-sm-2 col-sm-offset-0 col-xs-4 col-xs-offset-4">
+        <h2 class="hand-font text-center">- or -</h2>
+    </div>
+
+    <div class="col-sm-5 col-xs-12">
+        <form class="form-login" role="form">
+            <h3>Use existing one</h3>
+            <input ng-model="login.email" type="email" class="form-control first-input" placeholder="Email address" required autofocus>
+            <input ng-model="login.password" type="password" class="form-control last-input" placeholder="Password" required>
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="logIn()">Log in</button>
+        </form>
+    </div>
+</div>

@@ -1,20 +1,20 @@
 'use strict';
 
-angular.module('uiApp', [
-    'ngCookies',
-    'ngResource',
-    'ngSanitize',
-    'ngRoute'
-])
-    .config(function($routeProvider) {
+angular.module('nothanks-ui', [
+        'ngCookies',
+        'ngResource',
+        'ngSanitize',
+        'ngRoute'
+    ])
+    .config(function ($routeProvider) {
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
                 controller: 'MainCtrl'
             })
-            .when('/test', {
-                templateUrl: 'views/test.html',
-                controller: 'MainCtrl'
+            .when('/login', {
+                templateUrl: 'views/login.html',
+                controller: 'LoginCtrl'
             })
             .otherwise({
                 redirectTo: '/'
