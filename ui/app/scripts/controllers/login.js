@@ -2,14 +2,21 @@
 
 angular.module('nothanks-ui')
     .controller('LoginCtrl', function ($scope, Authentication) {
-        $scope.create = {};
+        $scope.newUser = {};
         $scope.login = {};
 
-        $scope.logIn = function () {
-            Authentication.logIn($scope.login.email, $scope.login.password);
+        $scope.logIn = function (email, password) {
+            Authentication.logIn(email, password);
         };
 
-        $scope.create = function () {
-            Authentication.create($scope.create.email, $scope.create.password);
+        $scope.createNewUser = function (email, password) {
+            $scope.newUser.error = undefined;
+            Authentication.addUser(email, password)
+                .success(function (data) {
+                    alert('User created!');
+                })
+                .error(function (data, status, headers, config) {
+                    $scope.newUser.error = data.message;
+                });
         };
     });

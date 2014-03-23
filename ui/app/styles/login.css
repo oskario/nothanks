@@ -39,6 +39,10 @@
     border-top-right-radius: 0;
 }
 
+#login-page .top h2 {
+    font-size: 60px;
+}
+
 @media (min-width: 768px) {
     #login-page #or-label {
         margin-top: 100px;
