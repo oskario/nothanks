@@ -17,4 +17,8 @@ angular.module('nothanks-ui')
         this.logIn = function (email, password) {
             alert('Logging ' + email + ' in');
         };
+
+        this.isLoggedIn = function () {
+            return false;
+        };
     });
