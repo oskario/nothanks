@@ -24,6 +24,7 @@
                 <h3>Use existing one</h3>
                 <input ng-model="login.email" type="text" class="form-control first-input" placeholder="Email address" required>
                 <input ng-model="login.password" type="password" class="form-control last-input" placeholder="Password" required>
+                <div ng-show="login.error" class="alert alert-danger">{{ login.error }}</div>
                 <label class="checkbox">
                     <input type="checkbox" value="remember-me"> Remember me
                 </label>

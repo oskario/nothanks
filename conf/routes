@@ -1,8 +1,9 @@
 
-GET		/start/:user				controllers.Application.start(user: String)
+
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-POST    /api/user					controllers.Auth.create					
+POST    /api/user					controllers.Auth.create	
+POST	/api/login					controllers.Auth.login				
 
 GET     /           				com.tuplejump.playYeoman.Yeoman.index
 ->      /        					yeoman.Routes
