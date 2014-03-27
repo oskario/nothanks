@@ -18,7 +18,7 @@ angular.module('nothanks-ui').controller('LoginCtrl',
 				$location.path("/");
 			};
 
-			$scope.onLogInError = function(message) {
+			$scope.onLogInError = function(data) {
 				$scope.login.error = data.message;
 			};
 
