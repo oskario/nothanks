@@ -18,8 +18,6 @@ import play.api.libs.iteratee.Input
 import play.api.libs.iteratee.Iteratee
 import play.api.libs.json.JsValue
 import play.libs.Akka
-import protocols.user.HostGameCommand
-import protocols.user.UserProtocol
 import services.LoggingService
 
 /**
@@ -85,8 +83,6 @@ object PlayerActorProtocol {
  * It handles all communication between user and internal system.
  */
 class PlayerActor(name: String) extends Actor {
-  import protocols.user.UserProtocol
-  import protocols.user.HostGameCommand
 
   val (enumerator, channel) = Concurrent.broadcast[JsValue]
 
@@ -104,16 +100,16 @@ class PlayerActor(name: String) extends Actor {
    * @param msg received message
    */
   def onReceive(msg: JsValue) = {
-    UserProtocol.getCmdName(msg) match {
-      case protocols.user.HostGameCommand.name =>
-        onHostCommandReceived(msg.as[HostGameCommand])
-    }
+//    UserProtocol.getCmdName(msg) match {
+//      case protocols.user.HostGameCommand.name =>
+//        onHostCommandReceived(msg.as[HostGameCommand])
+//    }
   }
 
-  /**
-   * Called every time a host game command has been received.
-   */
-  def onHostCommandReceived(command: HostGameCommand) = {
-    LoggingService.debug(name, s"Requested host: ${command.name}")
-  }
+//  /**
+//   * Called every time a host game command has been received.
+//   */
+//  def onHostCommandReceived(command: HostGameCommand) = {
+//    LoggingService.debug(name, s"Requested host: ${command.name}")
+//  }
 }

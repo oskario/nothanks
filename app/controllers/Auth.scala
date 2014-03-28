@@ -41,16 +41,16 @@ object Auth extends Controller {
           "status" -> false))
     }
   }
-  
+
   def login = Action { implicit request =>
 
     val email = fromPost("email")
     val password = fromPost("password")
-    
-  	(email, password) match {
+
+    (email, password) match {
       case (Some(e), Some(p)) =>
-      	User.login(e.as[String], p.as[String]) match {
-      	  case Success(user) => {
+        User.login(e.as[String], p.as[String]) match {
+          case Success(user) => {
             Ok(Json.obj(
               "status" -> true,
               "email" -> e,
@@ -61,7 +61,7 @@ object Auth extends Controller {
               "status" -> false,
               "message" -> "Invalid email or password"))
           }
-      	}
+        }
       case _ =>
         Results.BadRequest(Json.obj(
           "status" -> false,

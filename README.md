@@ -50,5 +50,8 @@ And then:
 
 ## Changelog
 
+### Version 0.2:
+* Working user-server communication
+* Basic game logic added
 ### Version 0.1:
 * Initial version

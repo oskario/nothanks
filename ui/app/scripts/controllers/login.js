@@ -35,7 +35,7 @@ angular.module('nothanks-ui').controller('LoginCtrl',
 			};
 
 			$scope.onNewUserError = function(data) {
-				$scope.newUser.error = data.message;
+				$scope.newUser.error = data.data.message;
 			};
 
 			$scope.resetErrors = function() {

@@ -2,27 +2,22 @@
 
 angular.module('nothanks-ui').service(
 		'Authentication',
-		function Authentication($http) {
+		function Authentication($http, Connection) {
 			var _loggedIn = false;
 
 			this.addUser = function(credentials, onSuccess, onFailure) {
-				console.debug('creating new user: ' + credentials.email + ' (' + credentials.password
-						+ ')');
+				console.debug('creating new user: ' + credentials.email + ' ('
+						+ credentials.password + ')');
 
-				$http({
-					method : 'POST',
-					url : '/api/user',
+				var message = {
+					cmd : 'createUser',
 					data : {
-						email : credentials.email,
-						password : credentials.password
+						email: credentials.email,
+						password: credentials.password
 					}
-				}).success(function(data) {
-					if (onSuccess)
-						onSuccess(data);
-				}).error(function(data) {
-					if (onFailure)
-						onFailure(data);
-				});
+				};
+
+				Connection.send(message).then(onSuccess, onFailure);
 			};
 
 			this.logIn = function(credentials, onSuccess, onFailure) {
@@ -37,12 +32,12 @@ angular.module('nothanks-ui').service(
 					}
 				}).success(function(data) {
 					_loggedIn = true;
-					
+
 					if (onSuccess)
 						onSuccess(data);
 				}).error(function(data) {
 					_loggedIn = false;
-					
+
 					if (onFailure)
 						onFailure(data);
 				});

@@ -26,7 +26,7 @@ object User {
       case Some(u) => Failure(UserAlreadyExists(u))
     }
   }
-  
+
   /**
    * Logs user in.
    */
@@ -35,7 +35,7 @@ object User {
 
     userWithEmail match {
       case Some(u) => {
-        if(u.password == password)
+        if (u.password == password)
           Success(u)
         else
           Failure(InvalidPassword(email))

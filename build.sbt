@@ -1,6 +1,6 @@
 name := "nothanks"
 
-version := "1.0-SNAPSHOT"
+version := "0.2-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   jdbc,

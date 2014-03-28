@@ -3,7 +3,8 @@
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 POST    /api/user					controllers.Auth.create	
-POST	/api/login					controllers.Auth.login				
+POST	/api/login					controllers.Auth.login	
+GET	    /api/ws  					controllers.Application.ws			    		
 
 GET     /           				com.tuplejump.playYeoman.Yeoman.index
 ->      /        					yeoman.Routes
