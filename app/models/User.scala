@@ -1,11 +1,13 @@
 package models
 
-import scala.util.Try
+import errors.EmailDoesNotExist
+import errors.InvalidPassword
+import errors.UserAlreadyExists
+import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
-import errors.UserAlreadyExists
-import errors.InvalidPassword
-import errors.EmailDoesNotExist
+import scala.util.Try
 
 object User {
 
@@ -14,33 +16,25 @@ object User {
   /**
    * Registers given user.
    */
-  def add(email: String, password: String): Try[User] = {
-    val alreadyRegistered = users.find(_.email == email)
-
-    alreadyRegistered match {
-      case None => {
-        val user = User(email, password)
-        users += user
-        Success(user)
-      }
-      case Some(u) => Failure(UserAlreadyExists(u))
+  def add(email: String, password: String): Future[Try[db.User]] = {
+    db.User.findByEmail(email).flatMap {
+      case Some(user) => Future(Failure(UserAlreadyExists(user)))
+      case None => db.User.add(db.User(email, password))
     }
   }
 
   /**
    * Logs user in.
    */
-  def login(email: String, password: String): Try[User] = {
-    val userWithEmail = users.find(_.email == email)
-
-    userWithEmail match {
-      case Some(u) => {
-        if (u.password == password)
-          Success(u)
+  def login(email: String, password: String): Future[Try[db.User]] = {
+    db.User.findByEmail(email).flatMap {
+      case Some(user) => {
+        if (user.password == password)
+          Future(Success(user))
         else
-          Failure(InvalidPassword(email))
+          Future(Failure(InvalidPassword(email)))
       }
-      case None => Failure(EmailDoesNotExist(email))
+      case None => Future(Failure(EmailDoesNotExist(email)))
     }
   }
 }

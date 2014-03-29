@@ -5,4 +5,4 @@ package errors
  * 
  * @param message error message
  */
-abstract class GameError(message: String) extends Exception(message)
+abstract class GameError(message: String) extends Throwable(message)

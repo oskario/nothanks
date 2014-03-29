@@ -14,12 +14,11 @@ angular.module('nothanks-ui').controller('LoginCtrl',
 			};
 
 			$scope.onLoggedIn = function() {
-				alert('Logged in correctly');
 				$location.path("/");
 			};
 
 			$scope.onLogInError = function(data) {
-				$scope.login.error = data.message;
+				$scope.login.error = data.data.message;
 			};
 
 			$scope.createNewUser = function(email, password) {

@@ -9,7 +9,6 @@ import akka.actor.PoisonPill
 import akka.actor.Props
 import akka.actor.actorRef2Scala
 import akka.pattern.ask
-import akka.util.Timeout.durationToTimeout
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.iteratee.Iteratee
@@ -29,7 +28,6 @@ object ConnectionManager {
    */
   def getConnection(): scala.concurrent.Future[(Iteratee[JsValue, _], Enumerator[JsValue])] = {
     LoggingService.info(s"New user connected")
-    import ConnectionManagerProtocol._
 
     val connectionActor = getConnectionActor()
 
@@ -40,6 +38,7 @@ object ConnectionManager {
           connectionActor ! ConnectionActorProtocol.FromUser(received)
         }).map(_ => {
           LoggingService.info(s"Disconnected")
+          LoggingService.debug(s"Killing ConnectionActor")
           connectionActor ! PoisonPill
         })
 
